@@ -21,11 +21,19 @@ M.show_docker_images = function(opts)
 
         log.debug(parsed)
 
-        return {
-          value = parsed,
-          display = parsed.Repository, -- display key
-          ordinal = parsed.CreatedAt,  -- sorting key
-        }
+        if parsed then
+          return {
+            value = parsed,
+            display = parsed.Repository, -- display key
+            ordinal =
+                vim.iter({
+                  parsed.Repository,
+                  parsed.Tag,
+                  parsed.ID,
+                })
+                :join(":"), -- sorting key
+          }
+        end
       end
     }),
 
@@ -37,7 +45,8 @@ M.show_docker_images = function(opts)
           self.state.bufnr,
           0, -1, false,
           vim.iter({
-            "This is a preview for: " .. entry.display,
+            "ID: " .. entry.value.ID,
+            "",
             "```lua",
             vim.split(vim.inspect(entry.value), "\n", nil),
             "```",
