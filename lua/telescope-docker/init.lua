@@ -1,5 +1,6 @@
 local pickers = require('telescope.pickers')
 local finders = require('telescope.finders')
+local previewers = require('telescope.previewers')
 local config = require('telescope.config').values
 
 local M = {}
@@ -21,6 +22,16 @@ M.show_docker_images = function(opts)
       end
     }),
     sorter = config.generic_sorter(opts),
+    previewer = previewers.new_buffer_previewer({
+      title = "Docker Image Details",
+      define_preview = function(self, entry)
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, {
+          "Name: " .. entry.display,
+          "Ordinal: " .. entry.ordinal,
+          -- "Value: ", vim.inspect(entry),
+        })
+      end
+    }),
   }):find()
   print("Showing docker images")
 end
