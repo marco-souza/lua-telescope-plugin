@@ -8,12 +8,10 @@ local M = {}
 
 M.show_docker_images = function(opts)
   pickers.new(opts, {
-    finder = finders.new_table({
-      results = {
-        { name = "Brazil",    value = { 1, 2, 3, 5, 45 } },
-        { name = "Peru",      value = { 1, 2, 3, 5, 45 } },
-        { name = "Argentina", value = { 1, 2, 3, 5, 45 } },
-      },
+    finder = finders.new_async_job({
+      command_generator = function()
+        return { "docker", "images", "--format", "json" }
+      end,
       entry_maker = function(entry)
         return {
           value = entry,
