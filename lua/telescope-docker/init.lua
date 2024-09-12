@@ -22,12 +22,13 @@ M.show_docker_images = function(opts)
         log.debug(parsed)
 
         return {
-          value = entry,
-          display = entry.name, -- display key
-          ordinal = entry.name, -- sorting key
+          value = parsed,
+          display = parsed.Repository, -- display key
+          ordinal = parsed.CreatedAt,  -- sorting key
         }
       end
     }),
+
     sorter = config.generic_sorter(opts),
     previewer = previewers.new_buffer_previewer({
       title = "Docker Image Details",
@@ -37,7 +38,7 @@ M.show_docker_images = function(opts)
           0, -1, false,
           vim.iter({
             "This is a preview for: " .. entry.display,
-            "```json",
+            "```lua",
             vim.split(vim.inspect(entry.value), "\n", nil),
             "```",
           })
