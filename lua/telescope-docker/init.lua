@@ -4,6 +4,10 @@ local previewers = require('telescope.previewers')
 local utils = require('telescope.previewers.utils')
 local config = require('telescope.config').values
 
+local log = require('plenary.log'):new()
+
+log.level = "debug"
+
 local M = {}
 
 M.show_docker_images = function(opts)
@@ -13,6 +17,10 @@ M.show_docker_images = function(opts)
         return { "docker", "images", "--format", "json" }
       end,
       entry_maker = function(entry)
+        local parsed = vim.json.decode(entry)
+
+        log.debug(parsed)
+
         return {
           value = entry,
           display = entry.name, -- display key
@@ -29,7 +37,7 @@ M.show_docker_images = function(opts)
           0, -1, false,
           vim.iter({
             "This is a preview for: " .. entry.display,
-            "```lua",
+            "```json",
             vim.split(vim.inspect(entry.value), "\n", nil),
             "```",
           })
