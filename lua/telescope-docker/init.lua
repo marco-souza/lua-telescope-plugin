@@ -4,6 +4,9 @@ local previewers = require('telescope.previewers')
 local utils = require('telescope.previewers.utils')
 local config = require('telescope.config').values
 
+local actions = require('telescope.actions')
+local actions_state = require('telescope.actions.state')
+
 local log = require('plenary.log'):new()
 
 log.level = "debug"
@@ -61,6 +64,16 @@ M.show_docker_images = function(opts)
     finder = finder,
     sorter = config.generic_sorter(opts),
     previewer = previewer,
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local selection = actions_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+
+        log.debug("Selected: " .. selection.display)
+      end)
+
+      return true
+    end
   }):find()
 
   print("Showing docker images")
