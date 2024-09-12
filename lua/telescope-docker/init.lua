@@ -15,7 +15,7 @@ M.show_docker_images = function(opts)
       },
       entry_maker = function(entry)
         return {
-          -- value = entry,
+          value = entry,
           display = entry.name, -- display key
           ordinal = entry.name, -- sorting key
         }
@@ -30,7 +30,7 @@ M.show_docker_images = function(opts)
           0, -1, false,
           vim.iter({
             "This is a preview for: " .. entry.display,
-            vim.split(vim.inspect(entry), "\n", nil),
+            vim.split(vim.inspect(entry.value), "\n", nil),
           })
           :flatten()
           :totable()
