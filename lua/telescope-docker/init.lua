@@ -70,6 +70,19 @@ M.show_docker_images = function(opts)
         actions.close(prompt_bufnr)
 
         log.debug("Selected: " .. selection.display)
+
+        local command = {
+          "term",
+          "docker",
+          "run",
+          "-it",
+          "--rm",
+          selection.value.Repository,
+        }
+
+        log.debug("Running command: " .. vim.inspect(command))
+
+        vim.cmd(vim.iter(command):join(" "))
       end)
 
       return true
